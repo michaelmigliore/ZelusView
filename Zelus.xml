@@ -1,0 +1,10 @@
+<!-- List of built-in sources -->
+<ParaViewSources>
+    <Proxy group="sources" name="SphereSource" />
+    <Proxy group="sources" name="CubeSource" />
+    <Proxy group="sources" name="CylinderSource" />
+    <Proxy group="sources" name="LineSource" />
+    <Proxy group="sources" name="PlaneSource" />
+    <Proxy group="sources" name="PointSource" />
+    <Proxy group="sources" name="SuperquadricSource" />
+</ParaViewSources>
