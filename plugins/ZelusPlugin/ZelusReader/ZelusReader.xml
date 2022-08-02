@@ -22,7 +22,7 @@
       </DoubleVectorProperty>
       <Hints>
         <ReaderFactory extensions="zbin"
-                       file_description="ZBIN Files" />
+                       file_description="Zelus serialized" />
       </Hints>
     </SourceProxy>
   </ProxyGroup>

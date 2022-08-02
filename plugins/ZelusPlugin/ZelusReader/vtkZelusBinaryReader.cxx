@@ -4,8 +4,8 @@
 #include "vtkFloatArray.h"
 #include "vtkInformation.h"
 #include "vtkInformationVector.h"
-#include "vtkMultiBlockDataSet.h"
 #include "vtkPointData.h"
+#include "vtkPolyData.h"
 #include "vtkStreamingDemandDrivenPipeline.h"
 #include "vtksys/SystemTools.hxx"
 
@@ -20,11 +20,24 @@ vtkStandardNewMacro(vtkZelusBinaryReader);
 class vtkZelusBinaryReader::vtkInternals
 {
 public:
-	vtkSmartPointer<vtkMultiBlockDataSet> BuildCurrentMultiBlock()
+	vtkSmartPointer<vtkPolyData> BuildCurrentMesh()
 	{
-		vtkNew<vtkMultiBlockDataSet> output;
+		vtkNew<vtkPolyData> output;
 
 		const zsSimMesh& simMesh = this->SimWorld.GetSimMesh();
+
+		// vertices
+		vtkNew<vtkPoints> points;
+		points->SetData(this->ConvertArray(simMesh.vertices.positions));
+		output->SetPoints(points);
+
+		// triangles
+		vtkNew<vtkCellArray> triangles;
+		for (const zsClothTriangle& t : simMesh.triangles)
+		{
+			triangles->InsertNextCell({ t.vertexIndices[0], t.vertexIndices[1], t.vertexIndices[2] });
+		}
+		output->SetPolys(triangles);
 
 		return output;
 	}
@@ -36,12 +49,28 @@ public:
 			if (this->Cache[i] == nullptr)
 			{
 				this->SimWorld.Update();
-				this->Cache[i] = BuildCurrentMultiBlock();
+				this->Cache[i] = this->BuildCurrentMesh();
 			}
 		}
 	};
 
-	std::vector<vtkSmartPointer<vtkMultiBlockDataSet>> Cache;
+	vtkSmartPointer<vtkFloatArray> ConvertArray(const zsArray<zsVector3>& buffer)
+	{
+		vtkNew<vtkFloatArray> dataArray;
+		dataArray->SetNumberOfComponents(3);
+		dataArray->SetNumberOfTuples(buffer.size());
+
+		for (int i = 0; i < buffer.size(); i++)
+		{
+			dataArray->SetTypedComponent(i, 0, buffer[i].x);
+			dataArray->SetTypedComponent(i, 1, buffer[i].y);
+			dataArray->SetTypedComponent(i, 2, buffer[i].z);
+		}
+
+		return dataArray;
+	}
+
+	std::vector<vtkSmartPointer<vtkPolyData>> Cache;
 	zsSimulationWorld SimWorld;
 };
 
@@ -104,7 +133,7 @@ int vtkZelusBinaryReader::RequestInformation(
 	this->Internals->SimWorld.GetSimWorldDescriptor().deterministic = true;
 	zsReal timestep = this->Internals->SimWorld.GetPhysicsDescriptor().timestep;
 
-	zsInt maxFrame = this->MaxTime / timestep;
+	zsInt maxFrame = this->MaxTime * timestep;
 
 	vtkInformation* info = outputVector->GetInformationObject(0);
 
@@ -116,15 +145,15 @@ int vtkZelusBinaryReader::RequestInformation(
 
 	for (int i = 0; i <= maxFrame; i++)
 	{
-		info->Append(vtkStreamingDemandDrivenPipeline::TIME_STEPS(), i * timestep);
+		info->Append(vtkStreamingDemandDrivenPipeline::TIME_STEPS(), i / timestep);
 		this->Internals->Cache.push_back(nullptr);
 	}
 
-	std::array<double, 2> timeRange = { { 0.0, maxFrame * timestep } };
+	std::array<double, 2> timeRange = { { 0.0, this->MaxTime } };
 	info->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange.data(), 2);
 
 	// convert initial state
-	this->Internals->Cache[0] = this->Internals->BuildCurrentMultiBlock();
+	this->Internals->Cache[0] = this->Internals->BuildCurrentMesh();
 
 	return 1;
 }
@@ -134,7 +163,7 @@ int vtkZelusBinaryReader::RequestData(
 	vtkInformation*, vtkInformationVector**, vtkInformationVector* outputVector)
 {
 	// Get the output
-	vtkMultiBlockDataSet* output = vtkMultiBlockDataSet::GetData(outputVector);
+	vtkPolyData* output = vtkPolyData::GetData(outputVector);
 
 	// Apply selected animations on specified time step to the model's transforms
 	vtkInformation* info = outputVector->GetInformationObject(0);

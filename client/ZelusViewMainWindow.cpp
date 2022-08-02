@@ -10,6 +10,8 @@
 #include "pqRepresentationToolbar.h"
 #include "pqApplicationCore.h"
 #include "pqMainWindowEventManager.h"
+#include "pqVCRToolbar.h"
+#include "pqAnimationTimeToolbar.h"
 
 #include "vtkSMReaderFactory.h"
 
@@ -53,10 +55,21 @@ ZelusViewMainWindow::ZelusViewMainWindow()
     reprToolbar->layout()->setSpacing(0);
     addToolBar(reprToolbar);
 
+    // Add the Time Control Toolbar
+    QToolBar* vcrToolbar = new pqVCRToolbar(this);
+    vcrToolbar->layout()->setSpacing(0);
+    addToolBar(vcrToolbar);
+
+    // Add the Time Control Toolbar
+    QToolBar* timeToolbar = new pqAnimationTimeToolbar(this);
+    timeToolbar->layout()->setSpacing(0);
+    addToolBar(timeToolbar);
+
     // white list reader
     vtkSMReaderFactory::AddReaderToWhitelist("sources", "objreader");
     vtkSMReaderFactory::AddReaderToWhitelist("sources", "stlreader");
     vtkSMReaderFactory::AddReaderToWhitelist("sources", "glTF 2.0 Reader");
+    vtkSMReaderFactory::AddReaderToWhitelist("sources", "ZelusReader");
 
     // Final step, define application behaviors. Since we want all ParaView
     // behaviors, we use this convenience method.

@@ -1,4 +1,4 @@
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # Classic plugin scan/build
 # Each plugin should be listed in the PLUGIN_FILES arg of paraview_plugin_scan
@@ -15,7 +15,6 @@ paraview_plugin_build(
   LIBRARY_DESTINATION "${CMAKE_INSTALL_LIBDIR}"
   LIBRARY_SUBDIRECTORY "${PARAVIEW_PLUGIN_SUBDIR}"
   PLUGINS_FILE_NAME "ZelusView.xml"
-  INSTALL_EXPORT ZelusViewPlugins
   CMAKE_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ZelusView
   LIBRARY_SUBDIRECTORY "ZelusView"
   PLUGINS ${plugins}

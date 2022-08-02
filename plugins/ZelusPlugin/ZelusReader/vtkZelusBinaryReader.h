@@ -1,12 +1,12 @@
 #pragma once
 
-#include "vtkMultiBlockDataSetAlgorithm.h"
+#include "vtkPolyDataAlgorithm.h"
 
-class vtkZelusBinaryReader : public vtkMultiBlockDataSetAlgorithm
+class vtkZelusBinaryReader : public vtkPolyDataAlgorithm
 {
 public:
 	static vtkZelusBinaryReader* New();
-	vtkTypeMacro(vtkZelusBinaryReader, vtkMultiBlockDataSetAlgorithm);
+	vtkTypeMacro(vtkZelusBinaryReader, vtkPolyDataAlgorithm);
 	void PrintSelf(ostream& os, vtkIndent indent) override;
 
 	vtkSetStringMacro(FileName);
