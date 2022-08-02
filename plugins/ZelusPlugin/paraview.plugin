@@ -1,0 +1,7 @@
+NAME
+  ZelusPlugin
+DESCRIPTION
+  todo
+REQUIRES_MODULES
+  VTK::CommonCore
+  VTK::FiltersCore
