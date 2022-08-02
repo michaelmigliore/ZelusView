@@ -1,0 +1,8 @@
+NAME
+  ZelusReader
+DESCRIPTION
+  Zelus Reader
+REQUIRES_MODULES
+  ParaView::VTKExtensionsIOCore
+  VTK::CommonCore
+  VTK::CommonExecutionModel

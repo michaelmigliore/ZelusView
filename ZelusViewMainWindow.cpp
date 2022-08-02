@@ -11,6 +11,8 @@
 #include "pqApplicationCore.h"
 #include "pqMainWindowEventManager.h"
 
+#include "vtkSMReaderFactory.h"
+
 class ZelusViewMainWindow::Internals : public Ui::ZelusViewMainWindow
 {
 };
@@ -50,6 +52,11 @@ ZelusViewMainWindow::ZelusViewMainWindow()
     reprToolbar->setObjectName("Representation");
     reprToolbar->layout()->setSpacing(0);
     addToolBar(reprToolbar);
+
+    // white list reader
+    vtkSMReaderFactory::AddReaderToWhitelist("sources", "objreader");
+    vtkSMReaderFactory::AddReaderToWhitelist("sources", "stlreader");
+    vtkSMReaderFactory::AddReaderToWhitelist("sources", "glTF 2.0 Reader");
 
     // Final step, define application behaviors. Since we want all ParaView
     // behaviors, we use this convenience method.

@@ -1,0 +1,12 @@
+NAME
+  ZelusReader::vtkZelusReader
+LIBRARY_NAME
+  vtkZelusReader
+DESCRIPTION
+  Zelus Reader
+DEPENDS
+  ParaView::VTKExtensionsCore
+  VTK::CommonDataModel
+  VTK::CommonExecutionModel
+PRIVATE_DEPENDS
+  ParaView::VTKExtensionsIOCore

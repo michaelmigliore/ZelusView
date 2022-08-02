@@ -14,7 +14,7 @@ set(sources
   ZelusViewMainWindow.h
   ZelusViewMainWindow.ui)
 
-#add_subdirectory(VTKExtension)
+add_subdirectory(ZelusPlugin)
 
 paraview_client_add(
   NAME ZelusView

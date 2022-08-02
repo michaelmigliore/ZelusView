@@ -17,8 +17,5 @@
 set(classes
   vtkZelusBinaryReader)
 
-vtk_module_add_module(ParaView::Zelus
+vtk_module_add_module(ZelusReader::vtkZelusReader
   CLASSES ${classes})
-
-paraview_add_server_manager_xmls(
-  XMLS  Resources/Zelus.xml)
