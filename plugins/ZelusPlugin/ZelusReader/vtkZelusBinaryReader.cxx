@@ -1,5 +1,6 @@
 #include "vtkZelusBinaryReader.h"
 
+#include "vtkCellData.h"
 #include "vtkCommand.h"
 #include "vtkFloatArray.h"
 #include "vtkInformation.h"
@@ -20,24 +21,76 @@ vtkStandardNewMacro(vtkZelusBinaryReader);
 class vtkZelusBinaryReader::vtkInternals
 {
 public:
-	vtkSmartPointer<vtkPolyData> BuildCurrentMesh()
+	vtkSmartPointer<vtkPolyData> BuildCurrentMesh(vtkPolyData* initialMesh)
 	{
 		vtkNew<vtkPolyData> output;
 
 		const zsSimMesh& simMesh = this->SimWorld.GetSimMesh();
+		const zsSimMapping& simMapping = this->SimWorld.GetSimMapping();
 
-		// vertices
+		this->SimWorld.UpdateEnergies();
+
+		// data changing over time
 		vtkNew<vtkPoints> points;
-		points->SetData(this->ConvertArray(simMesh.vertices.positions));
+		points->SetData(this->ConvertArray<zsVector3, vtkFloatArray, 3>("position", simMesh.vertices.positions));
 		output->SetPoints(points);
 
-		// triangles
-		vtkNew<vtkCellArray> triangles;
-		for (const zsClothTriangle& t : simMesh.triangles)
+		// point data
+		output->GetPointData()->SetNormals(this->ConvertArray<zsVector3, vtkFloatArray, 3>("normal", simMesh.perVertexNormalsStart));
+		output->GetPointData()->SetScalars(this->ConvertArray<zsVector3, vtkFloatArray, 3>("velocity", simMesh.vertices.velocities));
+		output->GetPointData()->AddArray(this->ConvertArray<zsReal, vtkFloatArray, 1>("energy", simMesh.vertices.energies));
+
+		// fixed data over time
+		if (initialMesh)
 		{
-			triangles->InsertNextCell({ t.vertexIndices[0], t.vertexIndices[1], t.vertexIndices[2] });
+			// shallow copy
+			output->SetPolys(initialMesh->GetPolys());
+			output->SetLines(initialMesh->GetLines());
+			output->GetPointData()->SetTCoords(initialMesh->GetPointData()->GetTCoords());
+			output->GetPointData()->AddArray(initialMesh->GetPointData()->GetArray("type"));
+			output->GetPointData()->AddArray(initialMesh->GetPointData()->GetArray("invMass"));
+			output->GetCellData()->AddArray(initialMesh->GetCellData()->GetArray("edgeColor"));
+			output->GetCellData()->AddArray(initialMesh->GetCellData()->GetArray("triangleColor"));
 		}
-		output->SetPolys(triangles);
+		else
+		{
+			// triangles
+			vtkNew<vtkCellArray> triangles;
+			for (const zsClothTriangle& t : simMesh.triangles)
+			{
+				triangles->InsertNextCell({ t.vertexIndices[0], t.vertexIndices[1], t.vertexIndices[2] });
+			}
+			output->SetPolys(triangles);
+
+			// edges
+			vtkNew<vtkCellArray> edges;
+			for (const zsClothEdge& e : simMesh.edges)
+			{
+				edges->InsertNextCell({ e.vertexIndices[0], e.vertexIndices[1] });
+			}
+			output->SetLines(edges);
+
+			// point data
+			output->GetPointData()->SetTCoords(this->ConvertArray<zsVector2, vtkFloatArray, 2>("uv", simMesh.vertices.uvCoordinates));
+			output->GetPointData()->AddArray(this->ConvertArray<ZS_SIMULATION_OBJECT_TYPE, vtkUnsignedCharArray, 1>("type", simMesh.simTypeVertices));
+			output->GetPointData()->AddArray(this->ConvertArray<zsReal, vtkFloatArray, 1>("invMass", simMesh.vertices.inverseMasses));
+
+			// cell data
+			vtkNew<vtkIntArray> edgeColors;
+			edgeColors->SetName("edgeColor");
+			edgeColors->SetNumberOfTuples(simMesh.edges.size() + simMesh.triangles.size());
+			edgeColors->FillValue(-1);
+			simMapping.GetEdgeGlobalIndexMap().RunBatchArray([&](zsInt index, zsInt color) { edgeColors->SetTypedComponent(simMapping.ToGlobalEdge(index), 0, color); });
+
+			vtkNew<vtkIntArray> triangleColors;
+			triangleColors->SetName("triangleColor");
+			triangleColors->SetNumberOfTuples(simMesh.edges.size() + simMesh.triangles.size());
+			triangleColors->FillValue(-1);
+			simMapping.GetTriangleGlobalIndexMap().RunBatchArray([&](zsInt index, zsInt color) { triangleColors->SetTypedComponent(simMesh.edges.size() + simMapping.ToGlobalTriangle(index), 0, color); });
+
+			output->GetCellData()->AddArray(edgeColors);
+			output->GetCellData()->AddArray(triangleColors);
+		}
 
 		return output;
 	}
@@ -49,22 +102,37 @@ public:
 			if (this->Cache[i] == nullptr)
 			{
 				this->SimWorld.Update();
-				this->Cache[i] = this->BuildCurrentMesh();
+				this->Cache[i] = this->BuildCurrentMesh(this->Cache[0]);
 			}
 		}
 	};
 
-	vtkSmartPointer<vtkFloatArray> ConvertArray(const zsArray<zsVector3>& buffer)
+	template<typename inT, typename outT, int N>
+	std::enable_if_t<N >= 2> AddTuple(outT* dataArray, inT elem, int index)
 	{
-		vtkNew<vtkFloatArray> dataArray;
-		dataArray->SetNumberOfComponents(3);
+		for (int j = 0; j < N; j++)
+		{
+			dataArray->SetTypedComponent(index, j, elem[j]);
+		}
+	}
+
+	template<typename inT, typename outT, int N>
+	std::enable_if_t<N == 1> AddTuple(outT* dataArray, inT elem, int index)
+	{
+		dataArray->SetTypedComponent(index, 0, elem);
+	}
+
+	template<typename inT, typename outT, int N>
+	vtkSmartPointer<outT> ConvertArray(const char* name, const zsArray<inT>& buffer)
+	{
+		vtkNew<outT> dataArray;
+		dataArray->SetNumberOfComponents(N);
+		dataArray->SetName(name);
 		dataArray->SetNumberOfTuples(buffer.size());
 
 		for (int i = 0; i < buffer.size(); i++)
 		{
-			dataArray->SetTypedComponent(i, 0, buffer[i].x);
-			dataArray->SetTypedComponent(i, 1, buffer[i].y);
-			dataArray->SetTypedComponent(i, 2, buffer[i].z);
+			AddTuple<inT, outT, N>(dataArray.GetPointer(), buffer[i], i);
 		}
 
 		return dataArray;
@@ -153,7 +221,7 @@ int vtkZelusBinaryReader::RequestInformation(
 	info->Set(vtkStreamingDemandDrivenPipeline::TIME_RANGE(), timeRange.data(), 2);
 
 	// convert initial state
-	this->Internals->Cache[0] = this->Internals->BuildCurrentMesh();
+	this->Internals->Cache[0] = this->Internals->BuildCurrentMesh(nullptr);
 
 	return 1;
 }

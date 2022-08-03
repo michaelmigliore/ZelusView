@@ -1,10 +1,51 @@
-<!-- List of built-in sources -->
-<ParaViewSources>
-    <Proxy group="sources" name="SphereSource" />
-    <Proxy group="sources" name="CubeSource" />
-    <Proxy group="sources" name="CylinderSource" />
-    <Proxy group="sources" name="LineSource" />
-    <Proxy group="sources" name="PlaneSource" />
-    <Proxy group="sources" name="PointSource" />
-    <Proxy group="sources" name="SuperquadricSource" />
-</ParaViewSources>
+<ParaViewFilters>
+  <Category name="Common" menu_label="&amp;Common" preserve_order="1" show_in_toolbar="1">
+    <Proxy group="filters" name="ProgrammableFilter" omit_from_toolbar="1" />
+    <Proxy group="filters" name="Contour" omit_from_toolbar="1" />
+    <Proxy group="filters" name="Clip" omit_from_toolbar="1" />
+    <Proxy group="filters" name="Cut" omit_from_toolbar="1" />
+    <Proxy group="filters" name="Threshold" />
+    <Proxy group="filters" name="Glyph" />
+  </Category>
+  <Category name="DataAnalysis" menu_label="&amp;Data Analysis" preserve_order="1" show_in_toolbar="1">
+    <Proxy group="filters" name="ExtractHistogram" />
+    <Proxy group="filters" name="ExtractFieldDataOverTime" />
+    <Proxy group="filters" name="PlotAttributes" />
+    <Proxy group="filters" name="ComputeQuartiles" />
+    <Proxy group="filters" name="PlotDataOverTime" />
+  </Category>
+  <Category name="Annotation" menu_label="Annotation" preserve_order="1">
+    <Proxy group="filters" name="AnnotateGlobalData" />
+    <Proxy group="filters" name="AnnotateAttributeData" />
+    <Proxy group="filters" name="TimeToTextConvertor" />
+    <Proxy group="filters" name="TimeStepProgressFilter" />
+    <Proxy group="filters" name="DataSetRegionSurfaceFilter" />
+    <Proxy group="filters" name="EnvironmentAnnotation" />
+  </Category>
+  <Category name="Transformation" menu_label="Transformation" preserve_order="1" show_in_toolbar="1">
+    <Proxy group="filters" name="Calculator" omit_from_toolbar="1" />
+    <Proxy group="filters" name="PVConnectivityFilter" />
+    <Proxy group="filters" name="TransformFilter" />
+  </Category>
+
+  <Proxy group="filters" name="Calculator" icon=":/pqWidgets/Icons/pqCalculator.svg" />
+  <Proxy group="filters" name="ProgrammableFilter" icon=":/pqWidgets/Icons/pqProgrammableFilter.svg" />
+  <Proxy group="filters" name="Contour" icon=":/pqWidgets/Icons/pqIsosurface.svg" />
+  <Proxy group="filters" name="Clip" icon=":/pqWidgets/Icons/pqClip.svg" />
+  <Proxy group="filters" name="Cut" icon=":/pqWidgets/Icons/pqSlice.svg" />
+  <Proxy group="filters" name="Threshold" icon=":/pqWidgets/Icons/pqThreshold.svg" />
+  <Proxy group="filters" name="Glyph" icon=":/pqWidgets/Icons/pqGlyph.svg" />
+  <Proxy group="filters" name="ExtractHistogram" icon=":/pqWidgets/Icons/pqHistogram24.png" />
+  <Proxy group="filters" name="ExtractFieldDataOverTime" icon=":/pqWidgets/Icons/pqPlotGlobalOverTime.svg" />
+  <Proxy group="filters" name="PlotAttributes" icon=":/pqWidgets/Icons/pqPlotOverLine.svg" />
+  <Proxy group="filters" name="ComputeQuartiles" icon=":/pqWidgets/Icons/pqBoxChart16.png" />
+  <Proxy group="filters" name="PlotDataOverTime" icon=":/pqWidgets/Icons/pqPlotGlobalOverTime.svg"/>
+  <Proxy group="filters" name="AnnotateGlobalData" />
+  <Proxy group="filters" name="AnnotateAttributeData" />
+  <Proxy group="filters" name="TimeToTextConvertor" />
+  <Proxy group="filters" name="TimeStepProgressFilter" />
+  <Proxy group="filters" name="DataSetRegionSurfaceFilter" />
+  <Proxy group="filters" name="EnvironmentAnnotation" />
+  <Proxy group="filters" name="PVConnectivityFilter" icon=":/pqWidgets/Icons/pqFaceSetData.svg" />
+  <Proxy group="filters" name="TransformFilter" icon=":/pqWidgets/Icons/pqReflect.svg" />
+</ParaViewFilters>

@@ -14,6 +14,14 @@
         <FileListDomain name="files" />
         <Documentation>This property specifies the file name for the ZBIN reader.</Documentation>
       </StringVectorProperty>
+      <DoubleVectorProperty information_only="1"
+                            name="TimestepValues"
+                            repeatable="1">
+        <TimeStepsInformationHelper />
+        <Documentation>
+          Available timestep values.
+        </Documentation>
+      </DoubleVectorProperty>
       <DoubleVectorProperty command="SetMaxTime"
                             default_values="10.0"
                             name="MaxTime"

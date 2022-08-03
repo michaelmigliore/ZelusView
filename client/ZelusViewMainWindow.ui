@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1152</width>
-    <height>762</height>
+    <width>1600</width>
+    <height>800</height>
    </rect>
   </property>
   <property name="acceptDrops">
@@ -35,7 +35,14 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="pqTabbedMultiViewWidget" name="MultiViewWidget" native="true"/>
+     <widget class="pqTabbedMultiViewWidget" name="MultiViewWidget" native="true">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
@@ -44,7 +51,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1152</width>
+     <width>1600</width>
      <height>21</height>
     </rect>
    </property>
@@ -73,29 +80,11 @@
      <string>&amp;View</string>
     </property>
    </widget>
-   <widget class="QMenu" name="menuTools">
-    <property name="title">
-     <string>&amp;Tools</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menu_Help">
-    <property name="title">
-     <string>&amp;Help</string>
-    </property>
-   </widget>
-   <widget class="QMenu" name="menu_Macros">
-    <property name="title">
-     <string>&amp;Macros</string>
-    </property>
-   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
    <addaction name="menu_View"/>
    <addaction name="menuSources"/>
    <addaction name="menuFilters"/>
-   <addaction name="menuTools"/>
-   <addaction name="menu_Macros"/>
-   <addaction name="menu_Help"/>
   </widget>
   <widget class="pqStatusBar" name="statusbar"/>
   <widget class="QDockWidget" name="pipelineBrowserDock">
@@ -113,18 +102,6 @@
      <enum>Qt::DefaultContextMenu</enum>
     </property>
    </widget>
-  </widget>
-  <widget class="QDockWidget" name="statisticsDock">
-   <property name="allowedAreas">
-    <set>Qt::BottomDockWidgetArea|Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Statistics Inspector</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="pqDataInformationWidget" name="statisticsView"/>
   </widget>
   <widget class="QDockWidget" name="informationDock">
    <property name="allowedAreas">
@@ -163,11 +140,10 @@
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>184</width>
-          <height>185</height>
+          <width>80</width>
+          <height>360</height>
          </rect>
         </property>
-        <zorder>MultiViewWidget</zorder>
        </widget>
       </widget>
      </item>
@@ -191,18 +167,6 @@
     <number>1</number>
    </attribute>
    <widget class="pqPropertiesPanel" name="propertiesPanel"/>
-  </widget>
-  <widget class="QDockWidget" name="multiBlockInspectorDock">
-   <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Multi-block Inspector</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="pqMultiBlockInspectorWidget" name="multiBlockInspectorPanel"/>
   </widget>
   <widget class="QDockWidget" name="colorMapEditorDock">
    <property name="allowedAreas">
@@ -238,38 +202,6 @@
     </property>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="displayPropertiesDock">
-   <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>Display</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="pqPropertiesPanel" name="displayPropertiesPanel">
-    <property name="panelMode" stdset="0">
-     <number>2</number>
-    </property>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="viewPropertiesDock">
-   <property name="allowedAreas">
-    <set>Qt::LeftDockWidgetArea|Qt::RightDockWidgetArea</set>
-   </property>
-   <property name="windowTitle">
-    <string>View</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="pqPropertiesPanel" name="viewPropertiesPanel">
-    <property name="panelMode" stdset="0">
-     <number>4</number>
-    </property>
-   </widget>
-  </widget>
   <widget class="QDockWidget" name="timeInspectorDock">
    <property name="allowedAreas">
     <set>Qt::AllDockWidgetAreas</set>
@@ -278,13 +210,13 @@
     <string>Time Inspector</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>2</number>
+    <number>8</number>
    </attribute>
    <widget class="pqTimeInspectorWidget" name="timeInspectorPanel"/>
   </widget>
   <widget class="QDockWidget" name="outputWidgetDock">
    <property name="floating">
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="windowTitle">
     <string>Output Messages</string>
@@ -310,12 +242,6 @@
    <class>pqTabbedMultiViewWidget</class>
    <extends>QWidget</extends>
    <header>pqTabbedMultiViewWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>pqDataInformationWidget</class>
-   <extends>QWidget</extends>
-   <header>pqDataInformationWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -357,12 +283,6 @@
    <class>pqOutputWidget</class>
    <extends>QWidget</extends>
    <header>pqOutputWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
-   <class>pqMultiBlockInspectorWidget</class>
-   <extends>QWidget</extends>
-   <header>pqMultiBlockInspectorWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

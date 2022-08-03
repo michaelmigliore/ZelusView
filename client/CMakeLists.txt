@@ -7,7 +7,8 @@ set(sources
 set(ui_files
   ZelusViewMainWindow.ui)
 set(xml_files
-  ZelusFilters.xml)
+  ZelusFilters.xml
+  ZelusSources.xml)
 
 # The main cmake macro to create a paraview based application
 paraview_client_add(
