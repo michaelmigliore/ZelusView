@@ -1,7 +1,4 @@
-option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
-
-# Classic plugin scan/build
-# Each plugin should be listed in the PLUGIN_FILES arg of paraview_plugin_scan
+include(ParaViewPlugin)
 
 paraview_plugin_scan(
   PLUGIN_FILES

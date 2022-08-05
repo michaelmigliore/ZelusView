@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/ZelusView">
+        <file>z-emotion.svg</file>
+    </qresource>
+</RCC>

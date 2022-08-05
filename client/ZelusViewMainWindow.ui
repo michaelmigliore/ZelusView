@@ -18,7 +18,9 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>:/pqWidgets/Icons/pvIcon512.png</normaloff>:/pqWidgets/Icons/pvIcon512.png</iconset>
+     <normaloff>:/ZelusView/z-emotion.svg</normaloff>
+     :/ZelusView/z-emotion.svg
+   </iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -287,7 +289,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../Qt/Components/Resources/pqComponents.qrc"/>
+  <include location="ZelusView.qrc"/>
  </resources>
  <connections/>
 </ui>

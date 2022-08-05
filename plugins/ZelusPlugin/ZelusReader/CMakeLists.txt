@@ -1,6 +1,8 @@
 set(classes
   vtkZelusBinaryReader)
 
+include(vtkModule)
+
 vtk_module_add_module(ZelusReader
   FORCE_STATIC # Using FORCE_STATIC build the vtk module statically into the plugin library, to avoid confusion when loading
   CLASSES ${classes})

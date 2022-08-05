@@ -1,20 +1,38 @@
-cmake_minimum_required(VERSION 3.18)
+# CMAKE_AUTOUIC has an issue in version < 3.21
+cmake_minimum_required(VERSION 3.21)
 project(ZelusView)
-
-find_package(ParaView REQUIRED)
-
-if (NOT PARAVIEW_USE_QT)
-  message(STATUS
-    "Skipping example: ${CMAKE_PROJECT_NAME} example requires PARAVIEW_USE_QT "
-    "to be enabled. Please rebuild ParaView (or point to a different build of "
-    "ParaView) with PARAVIEW_USE_QT set to TRUE")
-  return ()
-endif()
 
 include(GNUInstallDirs)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}")
+
+# ParaView needs QT5 >= 5.12
+set(QT5_ROOT "C:/Qt/Qt5.14.2/5.14.2/msvc2017_64" CACHE PATH "Root to QT5")
+
+set(Qt5_DIR "${QT5_ROOT}/lib/cmake/Qt5")
+
+include(FetchContent)
+FetchContent_Declare(ParaView
+    URL https://www.paraview.org/files/v5.10/ParaView-v5.10.1.tar.xz
+)
+
+# Configure ParaView
+set(PARAVIEW_VERSIONED_INSTALL OFF CACHE INTERNAL "")
+set(PARAVIEW_PLUGINS_DEFAULT OFF CACHE INTERNAL "")
+set(PARAVIEW_ENABLE_XDMF2 OFF CACHE INTERNAL "")
+set(PARAVIEW_ENABLE_EMBEDDED_DOCUMENTATION OFF CACHE INTERNAL "")
+set(PARAVIEW_USE_VTKM OFF CACHE INTERNAL "")
+set(PARAVIEW_BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+set(PARAVIEW_USE_QTHELP OFF CACHE INTERNAL "")
+set(CATALYST_BUILD_TOOLS OFF CACHE INTERNAL "")
+set(VTK_QT_VERSION 5 CACHE INTERNAL "")
+set(VTK_SMP_IMPLEMENTATION_TYPE STDThread CACHE INTERNAL "") # Should be TBB?
+
+FetchContent_MakeAvailable(ParaView)
+
+list(PREPEND CMAKE_MODULE_PATH "${ParaView_SOURCE_DIR}/CMake")
+list(PREPEND CMAKE_MODULE_PATH "${ParaView_SOURCE_DIR}/VTK/CMake")
 
 set(ZELUS_SHARED_BUILD OFF)
 add_subdirectory(Zelus)
