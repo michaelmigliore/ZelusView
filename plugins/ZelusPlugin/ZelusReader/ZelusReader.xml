@@ -28,10 +28,86 @@
                             number_of_elements="1">
         <Documentation>Specify the max time of the simulation (in seconds).</Documentation>
       </DoubleVectorProperty>
+      <!--<DoubleVectorProperty command="GetTimeStep"
+                            information_only="1"
+                            name="TimeStepInfo" />
+      <DoubleVectorProperty command="SetTimeStep"
+                            default_values="1"
+                            name="TimeStep"
+                            number_of_elements="1">
+        <DoubleRangeDomain name="range" default_mode="min">
+          <RequiredProperties>
+            <Property function="Range"
+                      name="TimeStepInfo" />
+          </RequiredProperties>
+        </DoubleRangeDomain>
+        <Documentation>Specify the timestep to use.</Documentation>
+      </DoubleVectorProperty> -->
       <Hints>
         <ReaderFactory extensions="zbin"
                        file_description="Zelus serialized" />
       </Hints>
     </SourceProxy>
   </ProxyGroup>
+
+  <ProxyGroup name="filters">
+    <SourceProxy name="ExtractClothType" class="vtkZelusExtractType" label="Extract Cloth by Type">
+      <Documentation long_help="Extract cloth of a specific type and remove other ones."
+                     short_help="Extract cloth of a specific type.">
+      </Documentation>
+      <InputProperty name="Input"
+                     command="SetInputConnection">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources"/>
+          <Group name="filters"/>
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkDataSet"/>
+        </DataTypeDomain>
+      </InputProperty>
+      <IntVectorProperty command="SetClothType"
+                         default_values="0"
+                         name="ClothType"
+                         number_of_elements="1"
+                         panel_visibility="default">
+        <EnumerationDomain name="enum">
+          <Entry text="Static/Kinematic" value="0"/>
+          <Entry text="Dynamic" value="1"/>
+        </EnumerationDomain>
+        <Documentation>
+          This property indicates the cloth type.
+        </Documentation>
+      </IntVectorProperty>
+   </SourceProxy>
+
+   <SourceProxy name="ExtractCells" class="vtkZelusExtractCell" label="Extract Edges/Triangles">
+      <Documentation long_help="Extract edges or triangles."
+                     short_help="Extract edges or triangles.">
+      </Documentation>
+      <InputProperty name="Input"
+                     command="SetInputConnection">
+        <ProxyGroupDomain name="groups">
+          <Group name="sources"/>
+          <Group name="filters"/>
+        </ProxyGroupDomain>
+        <DataTypeDomain name="input_type">
+          <DataType value="vtkDataSet"/>
+        </DataTypeDomain>
+      </InputProperty>
+      <IntVectorProperty command="SetCellType"
+                         default_values="0"
+                         name="CellType"
+                         number_of_elements="1"
+                         panel_visibility="default">
+        <EnumerationDomain name="enum">
+          <Entry text="Triangles" value="0"/>
+          <Entry text="Edges" value="1"/>
+        </EnumerationDomain>
+        <Documentation>
+          This property indicates the cell type.
+        </Documentation>
+      </IntVectorProperty>
+   </SourceProxy>
+ </ProxyGroup>
+
 </ServerManagerConfiguration>

@@ -4,12 +4,13 @@
     <Proxy group="filters" name="Contour" omit_from_toolbar="1" />
     <Proxy group="filters" name="Clip" omit_from_toolbar="1" />
     <Proxy group="filters" name="Cut" omit_from_toolbar="1" />
+    <Proxy group="filters" name="ExtractClothType" />
+    <Proxy group="filters" name="ExtractCells" />
     <Proxy group="filters" name="Threshold" />
     <Proxy group="filters" name="Glyph" />
   </Category>
   <Category name="DataAnalysis" menu_label="&amp;Data Analysis" preserve_order="1" show_in_toolbar="1">
     <Proxy group="filters" name="ExtractHistogram" />
-    <Proxy group="filters" name="ExtractFieldDataOverTime" />
     <Proxy group="filters" name="PlotAttributes" />
     <Proxy group="filters" name="ComputeQuartiles" />
     <Proxy group="filters" name="PlotDataOverTime" />
@@ -28,6 +29,8 @@
     <Proxy group="filters" name="TransformFilter" />
   </Category>
 
+  <Proxy group="filters" name="ExtractCells" icon=":/pqWidgets/Icons/pqEdgeCenterData.svg" />
+  <Proxy group="filters" name="ExtractClothType" icon=":/pqWidgets/Icons/pqExtractSelection.svg" />
   <Proxy group="filters" name="Calculator" icon=":/pqWidgets/Icons/pqCalculator.svg" />
   <Proxy group="filters" name="ProgrammableFilter" icon=":/pqWidgets/Icons/pqProgrammableFilter.svg" />
   <Proxy group="filters" name="Contour" icon=":/pqWidgets/Icons/pqIsosurface.svg" />
@@ -36,7 +39,6 @@
   <Proxy group="filters" name="Threshold" icon=":/pqWidgets/Icons/pqThreshold.svg" />
   <Proxy group="filters" name="Glyph" icon=":/pqWidgets/Icons/pqGlyph.svg" />
   <Proxy group="filters" name="ExtractHistogram" icon=":/pqWidgets/Icons/pqHistogram24.png" />
-  <Proxy group="filters" name="ExtractFieldDataOverTime" icon=":/pqWidgets/Icons/pqPlotGlobalOverTime.svg" />
   <Proxy group="filters" name="PlotAttributes" icon=":/pqWidgets/Icons/pqPlotOverLine.svg" />
   <Proxy group="filters" name="ComputeQuartiles" icon=":/pqWidgets/Icons/pqBoxChart16.png" />
   <Proxy group="filters" name="PlotDataOverTime" icon=":/pqWidgets/Icons/pqPlotGlobalOverTime.svg"/>

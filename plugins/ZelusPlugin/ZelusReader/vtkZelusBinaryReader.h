@@ -15,12 +15,16 @@ public:
 	vtkSetMacro(MaxTime, double);
 	vtkGetMacro(MaxTime, double);
 
+	vtkSetMacro(TimeStep, double);
+	vtkGetMacro(TimeStep, double);
+
 protected:
 	vtkZelusBinaryReader();
 	~vtkZelusBinaryReader() override;
 
 	char* FileName = nullptr;
 	double MaxTime = 0.0;
+	double TimeStep = 30.0;
 
 	int RequestInformation(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;
 	int RequestData(vtkInformation*, vtkInformationVector**, vtkInformationVector*) override;

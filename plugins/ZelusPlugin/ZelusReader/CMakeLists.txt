@@ -1,10 +1,12 @@
 set(classes
-  vtkZelusBinaryReader)
+  vtkZelusBinaryReader
+  vtkZelusExtractType
+  vtkZelusExtractCell)
 
 include(vtkModule)
 
 vtk_module_add_module(ZelusReader
-  FORCE_STATIC # Using FORCE_STATIC build the vtk module statically into the plugin library, to avoid confusion when loading
+  FORCE_STATIC
   CLASSES ${classes})
 
 target_link_libraries(ZelusReader PRIVATE Zelus)
